@@ -1,0 +1,10 @@
+{% load widget_tweaks %}
+<form method="POST">
+    {% csrf_token %}
+    {% for i in form %}
+    {% if i.name == 'phone_number' %}
+    <p>{{i.name}} {% render_field i placeholder='New text' %}</p>
+    {% endif %}
+    {% endfor %}
+    <input type="submit" value="Сохранить изменения" class="save-button" name="Save">
+</form>

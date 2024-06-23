@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>lab7</title>
+</head>
+<body>
+        <form method="POST" action="/change_table/">  <!-- Кнопки переключения таблиц -->
+            {% csrf_token %}
+            <input type="submit" name="Customers" value=Customers>
+            <input type="submit" name="Calls" value=Calls>
+            <input type="submit" name="Reasons" value=Reasons>
+            <input type="submit" name="Call_Reasons" value=Call_Reasons>
+            <input type="submit" name="Resolutions" value=Resolutions>
+        </form>
+
+        <h1>{{table_name}}</h1>  <!-- Имя таблицы -->
+
+        <table border="1" width="600" style="border-collapse:collapse; margin-bottom:20px;">  <!-- Таблица -->
+            <tr>
+                {% for field in fields_name %}
+                <th>{{ field }}</th>
+                {% endfor %}
+            </tr>
+            {% for item in query_results %}
+                <tr>
+                    <th>{{ item }}</th>
+                    {% if table_name == "Customers" %}
+                        <th>{{ item.phone_number }}</th>
+                        <th><form action="/edit/{{item.id}}">
+                            {% csrf_token %}
+                            <input type="submit" value="Edit" />
+                        </form></th>
+                        <th><form method="POST" action="/remove/{{item.id}}">
+                            {% csrf_token %}
+                            <input type="submit" value="Remove" />
+                        </form></th>
+                    {% elif table_name == "Calls" %}
+                        <th>{{item.cmr_id}}</th>
+                        <th>{{item.call_date}}</th>
+                        <th>{{item.issue_resolved}}</th>
+                    {% elif table_name == "Reasons" %}
+                        <th>{{item.reason_text}}</th>
+                    {% elif table_name == "Call_Reasons" %}
+                        <th>{{item.cl_id}}</th>
+                        <th>{{item.reason_id}}</th>
+                    {% elif table_name == "Resolutions" %}
+                        <th>{{item.cl_id}}</th>
+                        <th>{{item.resolution_text}}</th>
+
+                    {% endif %}
+
+
+                </tr>
+            {% endfor %}
+        </table>
+        <form action="/append">  <!-- Поле ввода -->
+            <input type="submit" value="Append">
+        </form>
+</body>
+</html>
